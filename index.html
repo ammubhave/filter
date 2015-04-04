@@ -45,8 +45,6 @@ sim.rooming.occupants(function (data) {
 });
 
 
-function ready_to_render() {
-
  
 /**********************************************
 *                                             *
@@ -389,7 +387,7 @@ function initializeSvg() {
 
 
 
-$(document).ready(function() {
+function ready_to_render() {
 
   // load and initialize side-view
   $('.svg').append(svg);
@@ -469,9 +467,7 @@ $(document).ready(function() {
       moveToRoom($(this).val());
     }
   });
-
-});
-
+  
 }
 
 </script>
