@@ -157,6 +157,30 @@ function moveTo(room) {
   $('.floorplan').css("transform", "translateY(" + yPixels + "px) translateX(" + xPixels + "px)");
 }
 
+function moveToFloor(floor) {
+  // magic numbers
+  var WindowWidth = $(".floorplans-container").width();
+  var WindowHeight = $(".floorplans-container").height();
+  var FloorplanWidth = 2225; var FloorplanHeight = 3565;
+
+  var scaleFactor = WindowWidth / (FloorplanWidth + 40); // 40px padding
+
+  var xPixels = FloorplanWidth/2 - WindowWidth/2;
+
+  var yReAlign = (1 - scaleFactor)/2 * FloorplanHeight; // returns top of map to top of window
+  var floorHeight = FloorplanHeight * scaleFactor / 10;
+  var yPixels = yReAlign + (10-floor) * floorHeight - (WindowHeight/3);
+  // last term is hack to "center" vertically
+
+  // flip
+  xPixels = -xPixels;
+  yPixels = -yPixels;
+
+  // MOVE!
+  $('.floorplan').css("transform", "translateY(" + yPixels + "px) translateX(" + xPixels + "px) scale(" + scaleFactor + ")");
+}
+
+
 /*
 function updateOverlay(room) {
   $(".overlay .number").html(roominfo[room].number);
@@ -380,7 +404,7 @@ $(document).ready(function() {
   updateDisplay(allrooms);
 
   // initialize (center) floorplan
-  moveTo('1064');
+  moveToFloor('10');
 
   $('.btn-sideview').click(function() {
     $('.floorplans-container').hide();

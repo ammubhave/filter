@@ -6,7 +6,7 @@ a{color:#92bfff;text-decoration:none;font-weight:400}
 .horz.sideview{padding:20px 0;background-color:#f7f7f7}
 .horz.results{padding:40px 0;background-color:#fff}
 .content{position:relative;margin-left:auto;margin-right:auto}
-@media all and (max-width:1280px) and (min-width:940px){.content{width:900px}}@media all and (min-width:1240px){.content{width:1200px}}.header,.footer{height:120px}
+@media all and (min-width:940px){.content{width:900px}}@media all and (min-width:1240px){.content{width:1200px}}@media all and (min-width:1540px){.content{width:1500px}}.header,.footer{height:120px}
 .masthead{position:absolute;top:25px;left:0;font-size:48px;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;cursor:default}
 .beta{color:#53adf9;position:absolute;top:33px;left:120px;font-size:10px;font-weight:400}
 .controls{display:inline-block;padding:0 10px;margin:0 0 10px 0}.controls .label{padding:2px 0;font-size:20px;font-weight:400;border-bottom:solid 1px #ddd;margin-bottom:5px}
