@@ -29,11 +29,11 @@ a {
   &.filters {
     padding: 40px 0px;
   }
-  &.sideview {
+  &.view {
     padding: 20px 0px;
     background-color: #f7f7f7;
   }
-  &.results {
+  &.list {
     padding: 40px 0px;
     background-color: #fff;
   }
@@ -45,7 +45,7 @@ a {
   margin-right: auto;
 }
 
-@media all and (max-width: 1280px) and (min-width: 940px) {
+@media all and (min-width: 940px) {
   .content {
     width: 900px;
   }
@@ -57,6 +57,11 @@ a {
   }
 }
 
+@media all and (min-width: 1540px) {
+  .content {
+    width: 1500px;
+  }
+}
 
 .header, .footer {
   height: 120px;
@@ -111,7 +116,7 @@ a {
 }
 
 .btn-consider {
-  width: 180px;
+  width: 120px;
 }
 
 .btn-toggleAllSections {
@@ -178,12 +183,12 @@ a {
 .number { left: 20px;  }
 .size {   left: 90px; }
 
-.sideview-container {
+.view-container {
     width: 100%;
     display: block;
     position: relative;
 }
-.sideview-container:after {
+.view-container:after {
     padding-top: 37.5%; /* 8:3 ratio */
     display: block;
     content: '';
@@ -290,5 +295,27 @@ a {
 }
 
 .btn-sideview, .btn-topview {
-  float: right;
+  position: relative;
+  height: 40px; width: 120px;
+  padding: 10px;
+  opacity: 0.4;
+  transition: all 0.2s;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+  &.active {
+    opacity: 0.8;
+  }
+}
+
+.btn-move-to {
+  position: relative;
+  top: 10px;
+}
+
+.view-controls {
+  display: block;
+  text-align: right;
+  margin-top: -10px;
 }

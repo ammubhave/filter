@@ -172,6 +172,7 @@ function ready_to_render() {
     var xFraction = parseInt(roominfo[room].x)/115;
     var xPixels = (xFraction * FloorplanWidth) - windowWidth/2;
 
+
     var yFraction = parseInt(roominfo[room].y)/30;
     var yPixels = ( ( 1.0 - yFraction) * FloorplanHeight) - windowHeight/2 - 185;
     // final term accounts for height of floor in svg
@@ -212,6 +213,7 @@ function ready_to_render() {
     }
   }
   */
+
 
   function applyFilters(results) {
 
@@ -377,7 +379,6 @@ function ready_to_render() {
     var html = room + ' (' + roominfo[room].size + ' sq. ft. ' + roominfo[room].capacity + ')';
     return html;
   }
-
   function initializeSvg() {
     $('#Rooms').children().children().hide();
     $('#Facilities, #Dining, #Firestairs, #Laundry, #Kitchens, #Lounges').hide();
@@ -411,7 +412,6 @@ function ready_to_render() {
     $('.btn-sideview').click(function() {
       $('.floorplans-container').hide();
     });
-
     $('.btn-topview').click(function() {
       $('.floorplans-container').show();
     });
@@ -472,45 +472,15 @@ function ready_to_render() {
       $('.overlay').hide();
     });
 
+  $('.moveToTarget').keypress(function(e) {
+    if (e.which == 13) {
+      moveToRoom($(this).val());
+    }
   });
 
 }
 
 </script>
-
-<div class="overlay" style="display: none;">
-  <div class="number">839</div>
-
-  <button class="btn exit-overlay">X</button>
-
-  <!--
-  <div class="floorplans-container">
-    <div class="floorplan">
-    </div>
-  </div>
-  -->
-
-  <div class="property">
-    <div class="label">Type</div>
-    <div class="value capacity">Single</div>
-  </div>
-  <div class="property">
-    <div class="label">Size</div>
-    <div class="value size">161 sq ft</div>
-  </div>
-  <div class="property">
-    <div class="label">Bathroom</div>
-    <div class="value bathroom">Shared with 840</div>
-  </div>
-  <div class="property">
-    <div class="label">Section</div>
-    <div class="value section">C-Tower</div>
-  </div>
-  <div class="property">
-    <div class="label">Side</div>
-    <div class="value view">Cambridge</div>
-  </div>
-</div>
 
 <div class="horz header">
   <div class="content">
@@ -525,13 +495,11 @@ function ready_to_render() {
 <div class="horz filters">
   <div class="content">
 
-    
     <div class="controls">
       <div class="label">Consider</div>
       <button class="btn btn-select btn-consider engaged btn-considerAll">All Rooms</button>
-      <button class="btn btn-select btn-consider engaged btn-available">Available Fall 2014</button>
+      <button class="btn btn-select btn-consider engaged btn-available">Available</button>
     </div>
-    
 
     <div class="controls">
       <div class="label">Type</div>
@@ -585,31 +553,48 @@ function ready_to_render() {
   </div>
 </div>
 
-<div class="horz sideview">
+<div class="horz view">
   <div class="content">
 
-    <div class="sideview-container">
+    <div class="view-controls">
+      <img src="img/topview-icon.png" class="btn-topview"/>
+      <img src="img/sideview-icon.png" class="btn-sideview">
+    </div>
+
+    <div class="view-container">
       <div class="map">
         <div class="svg">
           <!-- from js/svg.js -->
         </div>
       </div>
-    </div>
 
-    <div class="floorplans-container">
-      <div class="floorplan">
-        <!-- from js/floorplan-minimal-svg.js -->
+      <div class="floorplans-container">
+        <div class="floorplan">
+          <!-- from js/floorplan-minimal-svg.js -->
+        </div>
       </div>
     </div>
+
+    <div class="floorplan-move-controls">
+      <button class="btn-move-to" onclick="moveToFloor(1)">1</button>
+      <button class="btn-move-to" onclick="moveToFloor(2)">2</button>
+      <button class="btn-move-to" onclick="moveToFloor(3)">3</button>
+      <button class="btn-move-to" onclick="moveToFloor(4)">4</button>
+      <button class="btn-move-to" onclick="moveToFloor(5)">5</button>
+      <button class="btn-move-to" onclick="moveToFloor(6)">6</button>
+      <button class="btn-move-to" onclick="moveToFloor(7)">7</button>
+      <button class="btn-move-to" onclick="moveToFloor(8)">8</button>
+      <button class="btn-move-to" onclick="moveToFloor(9)">9</button>
+      <button class="btn-move-to" onclick="moveToFloor(10)">10</button>
+      <input class="moveToTarget" type="text"/>
+    </div>
+
 
   </div>
 </div>
 
-<div class="horz results">
+<div class="horz list">
   <div class="content">
-
-    <button class="btn-sideview">Side View</button>
-    <button class="btn-topview">Top View</button>
 
     <div class="count"></div>
     <div class="explanation">sorted by square footage</div>
