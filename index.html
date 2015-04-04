@@ -93,9 +93,9 @@ function updateList(newRooms) {
 
   $('.item').click(function() {
     var room = $(this).attr("title");
-    updateOverlay(room);
     moveTo(room); // floorplan
-    $('.overlay').show();
+    // updateOverlay(room);
+    // $('.overlay').show();
   });
 }
 
@@ -127,6 +127,37 @@ function updateSvg(newRooms) {
   oldRooms = newRooms;
 }
 
+function updateFloorplan(newRooms) {
+  // hide all
+  for (var i = 0; i < allrooms.length; i ++) {
+    $('#' + allrooms[i]).attr("fill", "none");
+  }
+  // highlight new
+  for (var i = 0; i < newRooms.length; i ++) {
+    $('#' + newRooms[i]).attr("fill", "#54AB67");
+  }
+}
+
+function moveTo(room) {
+  // magic numbers
+  var windowWidth = 900; var windowHeight = 330;
+  var FloorplanWidth = 2225; var FloorplanHeight = 3565;
+
+  var xFraction = parseInt(roominfo[room].x)/115;
+  var xPixels = (xFraction * FloorplanWidth) - windowWidth/2;
+
+  var yFraction = parseInt(roominfo[room].y)/30;
+  var yPixels = ( ( 1.0 - yFraction) * FloorplanHeight) - windowHeight/2 - 185;
+  // final term accounts for height of floor in svg
+
+  // flip
+  xPixels = -xPixels; yPixels = -yPixels;
+
+  // MOVE!
+  $('.floorplan').css("transform", "translateY(" + yPixels + "px) translateX(" + xPixels + "px)");
+}
+
+/*
 function updateOverlay(room) {
   $(".overlay .number").html(roominfo[room].number);
   $(".overlay .property .capacity").html(roominfo[room].capacity);
@@ -154,6 +185,7 @@ function updateOverlay(room) {
     }
   }
 }
+*/
 
 function applyFilters(results) {
 
@@ -183,6 +215,7 @@ function updateDisplay() {
   updateCount(results);
   updateList(results);
   updateSvg(results);
+  updateFloorplan(results);
 }
 
 // Helper:
@@ -311,40 +344,6 @@ function curvyWallsAmong(rooms) {
   return curvyWalls;
 }
 
-
-var windowWidth = 380;
-var windowHeight = 380;
-
-var FloorplanWidth = 2225;
-var FloorplanHeight = 3565; 
-
-function resetFloorplan() {
-  for (var i = 0; i < allrooms.length; i ++) {
-    $('#' + allrooms[i]).attr("fill", "#DDDDDD");
-  }
-}
-
-function highlightInFloorplan(room) {
-  resetFloorplan();
-  $('#' + room).attr("fill", "#54AB67");
-}
-
-function moveTo(room) {
-  var xFraction = parseInt(roominfo[room].x)/115;
-  var xPixels = (xFraction * FloorplanWidth) - windowWidth/2;
-
-  var yFraction = parseInt(roominfo[room].y)/30;
-  var yPixels = ( ( 1.0 - yFraction) * FloorplanHeight) - windowHeight/2 - 185;
-  // final term accounts for height of floor in svg
-
-  // flip
-  xPixels = -xPixels; yPixels = -yPixels;
-
-  $('.floorplan').css("transform", "translateY(" + yPixels + "px) translateX(" + xPixels + "px)");
-  highlightInFloorplan(room);
-}
-
-
 /*********************************************/
 
 
@@ -380,8 +379,16 @@ $(document).ready(function() {
   // initialize to defaults
   updateDisplay(allrooms);
 
-  // initialize floorplan
-  moveTo('1021C');
+  // initialize (center) floorplan
+  moveTo('1064');
+
+  $('.btn-sideview').click(function() {
+    $('.floorplans-container').hide();
+  });
+
+  $('.btn-topview').click(function() {
+    $('.floorplans-container').show();
+  });
 
   $('.btn-section').click(function() {
     $(this).toggleClass('engaged');
@@ -448,15 +455,12 @@ $(document).ready(function() {
 
   <button class="btn exit-overlay">X</button>
 
+  <!--
   <div class="floorplans-container">
     <div class="floorplan">
-      <!-- from js/floorplan-minimal-svg.js -->
     </div>
-
-    <!--
-    <object data="js/floorplan-minimal.svg" type="image/svg+xml" class="floorplan"></object>
-    -->
   </div>
+  -->
 
   <div class="property">
     <div class="label">Type</div>
@@ -552,18 +556,30 @@ $(document).ready(function() {
 
 <div class="horz sideview">
   <div class="content">
-    <div class="map-wrapper">
+
+    <div class="sideview-container">
       <div class="map">
         <div class="svg">
           <!-- from js/svg.js -->
         </div>
       </div>
     </div>
+
+    <div class="floorplans-container">
+      <div class="floorplan">
+        <!-- from js/floorplan-minimal-svg.js -->
+      </div>
+    </div>
+
   </div>
 </div>
 
 <div class="horz results">
   <div class="content">
+
+    <button class="btn-sideview">Side View</button>
+    <button class="btn-topview">Top View</button>
+
     <div class="count"></div>
     <div class="explanation">sorted by square footage</div>
     <div class="lists">
