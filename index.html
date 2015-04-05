@@ -134,11 +134,17 @@ function updateFloorplan(newRooms) {
   }
   // highlight new
   for (var i = 0; i < newRooms.length; i ++) {
-    $('#' + newRooms[i]).attr("fill", "#54AB67");
+    if (roominfo[newRooms[i]].capacity == 'Single') {
+      $('#' + newRooms[i]).attr("fill", "#54AB67");
+    }
+    else {
+      $('#' + newRooms[i]).attr("fill", "#53adf9");
+    }
   }
 }
 
 function moveToRoom(room) {
+
   // magic numbers
   var WindowWidth = $(".floorplans-container").width();
   var WindowHeight = $(".floorplans-container").height();
@@ -155,8 +161,22 @@ function moveToRoom(room) {
   // flip
   xPixels = -xPixels; yPixels = -yPixels;
 
+  var fill = $('#' + room).attr("fill");
+  if (fill == 'none') {
+    // highlight
+    $('#' + room).attr("fill", "#FCAF17");
+    $('#' + room).fadeOut(2000);
+  }
+  else {
+    // blink
+  $('#' + room).fadeOut(200); $('#' + room).fadeIn(200);
+  $('#' + room).fadeOut(200); $('#' + room).fadeIn(200);
+  $('#' + room).fadeOut(200); $('#' + room).fadeIn(1000);
+  }
+
   // MOVE!
   $('.floorplan').css("transform", "translateY(" + yPixels + "px) translateX(" + xPixels + "px)");
+
 }
 
 function moveToFloor(floor) {
@@ -350,16 +370,22 @@ function createTooltipFor(room) {
 function initializeSvg() {
   $('#Rooms').children().children().hide();
   $('#Facilities, #Dining, #Firestairs, #Laundry, #Kitchens, #Lounges').hide();
-
-  // add titles for tipsy
+  // tipsy tooltips
   for (var i = 0; i < allrooms.length; i ++) {
-    $('#r' + allrooms[i]).attr("title", createTooltipFor(allrooms[i]));
+    var group = $('#r' + allrooms[i]);
+    group.attr("title", createTooltipFor(allrooms[i]));
+    group.tipsy({gravity: 's', opacity: 1.0});
   }
-
-  // apply tipsy
-  $('#Rooms').children().children().tipsy({gravity: 'e', opacity: 1.0});
 }
 
+function initializeFloorplan() {
+  // tipsy tooltips
+  for (var i = 0; i < allrooms.length; i ++) {
+    var shape = $('#' + allrooms[i]);
+    shape.attr("title", createTooltipFor(allrooms[i]));
+    shape.tipsy({gravity: 's', opacity: 1.0});
+  }
+}
 
 
 $(document).ready(function() {
@@ -370,6 +396,7 @@ $(document).ready(function() {
 
   // load floorplan svg
   $('.floorplan').append(floorplan_minimal_svg);
+  initializeFloorplan();
 
   // initialize to defaults
   updateDisplay(allrooms);
@@ -379,10 +406,24 @@ $(document).ready(function() {
 
   $('.btn-sideview').click(function() {
     $('.floorplans-container').hide();
+    $('.map').show();
+
+    // stateful buttons
+    $('.btn-sideview').addClass('active');
+    $('.btn-topview').removeClass('active');
+
+    $('.floorplan-move-controls').fadeOut();
   });
 
   $('.btn-topview').click(function() {
     $('.floorplans-container').show();
+    $('.map').hide();
+
+    // stateful buttons
+    $('.btn-topview').addClass('active');
+    $('.btn-sideview').removeClass('active');
+
+    $('.floorplan-move-controls').fadeIn();
   });
 
   $('.btn-section').click(function() {
@@ -437,11 +478,18 @@ $(document).ready(function() {
     updateDisplay();
   });
 
-  $('.moveToTarget').keypress(function(e) {
+  $('.btn-move-to').click(function() {
+    var floor = $(this).html();
+    moveToFloor(floor);
+  });
+
+  $('.input-move-to').keypress(function(e) {
     if (e.which == 13) {
       moveToRoom($(this).val());
+      $('.btn-move-to').removeClass('engaged');
     }
   });
+
 
 });
 
@@ -459,7 +507,7 @@ $(document).ready(function() {
 
     <div class="controls">
       <div class="label">Consider</div>
-      <button class="btn btn-select btn-consider engaged btn-considerAll">All Rooms</button>
+      <button class="btn btn-select btn-consider btn-considerAll">All Rooms</button>
       <button class="btn btn-select btn-consider engaged btn-available">Available</button>
     </div>
 
@@ -521,7 +569,8 @@ $(document).ready(function() {
   <div class="content">
 
     <div class="view-controls">
-      <img src="img/topview-icon.png" class="btn-topview"/>
+      <div class="label">View</div>
+      <img src="img/topview-icon.png" class="btn-topview active"/>
       <img src="img/sideview-icon.png" class="btn-sideview">
     </div>
 
@@ -540,17 +589,18 @@ $(document).ready(function() {
     </div>
 
     <div class="floorplan-move-controls">
-      <button class="btn-move-to" onclick="moveToFloor(1)">1</button>
-      <button class="btn-move-to" onclick="moveToFloor(2)">2</button>
-      <button class="btn-move-to" onclick="moveToFloor(3)">3</button>
-      <button class="btn-move-to" onclick="moveToFloor(4)">4</button>
-      <button class="btn-move-to" onclick="moveToFloor(5)">5</button>
-      <button class="btn-move-to" onclick="moveToFloor(6)">6</button>
-      <button class="btn-move-to" onclick="moveToFloor(7)">7</button>
-      <button class="btn-move-to" onclick="moveToFloor(8)">8</button>
-      <button class="btn-move-to" onclick="moveToFloor(9)">9</button>
-      <button class="btn-move-to" onclick="moveToFloor(10)">10</button>
-      <input class="moveToTarget" type="text"/>
+      <div class="label">Seek</div>
+      <button class="btn-select btn-move-to">1</button>
+      <button class="btn-select btn-move-to">2</button>
+      <button class="btn-select btn-move-to">3</button>
+      <button class="btn-select btn-move-to">4</button>
+      <button class="btn-select btn-move-to">5</button>
+      <button class="btn-select engaged btn-move-to">6</button>
+      <button class="btn-select btn-move-to">7</button>
+      <button class="btn-select btn-move-to">8</button>
+      <button class="btn-select btn-move-to">9</button>
+      <button class="btn-select btn-move-to">10</button>
+      <input class="input-move-to" type="text" placeholder="Room"/>
     </div>
 
 
