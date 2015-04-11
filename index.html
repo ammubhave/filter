@@ -9,6 +9,46 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/tipsy.css">
 
+
+  <style>
+    .item_size350.item_Double {
+      background-color: #f3f3f3;
+    }
+    .item_size350.item_Double:hover {
+      background-color: #53adf9;
+    }
+    .item_size300.item_Double {
+      background-color: #f9f9f9;
+    }
+    .item_size300.item_Double:hover {
+      background-color: #53adf9;
+    }
+    .item_size250.item_Double {
+      background-color: #fafafa;
+    }
+    .item_size250.item_Double:hover {
+      background-color: #53adf9;
+    }
+    .item_size250.item_Single {
+      background-color: #f3f3f3;
+    }
+    .item_size250.item_Single:hover {
+      background-color: #53adf9;
+    }
+    .item_size200.item_Single {
+      background-color: #f9f9f9;
+    }
+    .item_size200.item_Single:hover {
+      background-color: #53adf9;
+    }
+    .item_size150.item_Single {
+      background-color: #fafafa;
+    }
+    .item_size150.item_Single:hover {
+      background-color: #53adf9;
+    }
+  </style>
+
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type='text/javascript' src='js/jquery.tipsy.js'></script>
   <script src="js/allrooms.js" type="text/javascript"></script> 
@@ -97,7 +137,7 @@ function updateList(newRooms) {
   // SORT BY SIZE
   var sortedNewRooms = [];
   for (var i = 0; i < newRooms.length; i ++) {
-    sortedNewRooms.push([newRooms[i], /*-parseInt(roominfo[newRooms[i]].number)*/ roominfo[newRooms[i]].size ]);
+    sortedNewRooms.push([newRooms[i], -parseInt(roominfo[newRooms[i]].number)+2000*Math.round(roominfo[newRooms[i]].size/50) ]);
   };
   sortedNewRooms.sort(function(a, b) { return a[1] - b[1] } );
   sortedNewRooms.reverse();
@@ -108,8 +148,9 @@ function updateList(newRooms) {
     if(section == '8910A') section = 'A Tower';
     else if(section == '8910B') section = 'B Tower';
     else if(section == '8910C') section = 'C Tower';
+//    section = section + ' (~' + 50*Math.round(roominfo[number].size/50) + ' sq. ft.)';
     var html = '\
-      <div class="item" title="' + number + '">\
+      <div class="item item_size' + roominfo[number].size + ' item_' + roominfo[number].capacity + '" title="' + number + '">\
         <span class="number">' + number + '</span>\
         <span class="size">' + section + '</span>\
       </div>';
@@ -533,6 +574,8 @@ function ready_to_render() {
   <div class="content">
     <div class="masthead">Filter</div>
     <div class="beta">BETA</div>
+    <a href="http://simmons.mit.edu/rooming" style="display: block; position: absolute; left: 200px; top: 40px; border: solid 1px #ddd; background-color: #444;
+color: rgba(255, 255, 255, 0.85);" class="btn">Go to Rooming Floorplans</a>
     <div style="float: right; margin-top: 50px">
       Logged in as <span id="my_username"></span>
     </div>
