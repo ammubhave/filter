@@ -35,6 +35,8 @@ var d_taken = $.Deferred();
 var d_occupants = $.Deferred();
 $.when(d_taken, d_occupants).done(function(_taken, _occupants) {
   ready_to_render();
+
+  $('.btn-available').click();
 });
 
 sim.rooming.taken(function (data) {
@@ -95,17 +97,21 @@ function updateList(newRooms) {
   // SORT BY SIZE
   var sortedNewRooms = [];
   for (var i = 0; i < newRooms.length; i ++) {
-    sortedNewRooms.push([newRooms[i], roominfo[newRooms[i]].size ]);
+    sortedNewRooms.push([newRooms[i], /*-parseInt(roominfo[newRooms[i]].number)*/ roominfo[newRooms[i]].size ]);
   };
   sortedNewRooms.sort(function(a, b) { return a[1] - b[1] } );
   sortedNewRooms.reverse();
 
   for (var i = 0; i < sortedNewRooms.length; i ++) {
     var number = sortedNewRooms[i][0]; // [1] is size
+    var section = roominfo[number].section;
+    if(section == '8910A') section = 'A Tower';
+    else if(section == '8910B') section = 'B Tower';
+    else if(section == '8910C') section = 'C Tower';
     var html = '\
       <div class="item" title="' + number + '">\
         <span class="number">' + number + '</span>\
-        <span class="size">' + roominfo[number].size + ' sq. ft.</span>\
+        <span class="size">' + section + '</span>\
       </div>';
 
     if (roominfo[number].capacity == 'Double') { $('.results-list-doubles').append(html); }
@@ -264,7 +270,10 @@ function updateDisplay() {
 // Helper:
 function sortBySize(rooms) {
   rooms.sort(function(r1, r2) {
-    return roominfo[r2].size - roominfo[r1].size;
+
+    // TODO : 
+    return roominfo[r2]
+    //return roominfo[r2].size - roominfo[r1].size;
   });
   return rooms;
 }
@@ -390,7 +399,7 @@ function curvyWallsAmong(rooms) {
 /*********************************************/
 
 function createTooltipFor(room) {
-  var html = room + ' (' + roominfo[room].size + ' sq. ft. ' + roominfo[room].capacity + ')';
+  var html = room; // + ' (' + roominfo[room].size + ' sq. ft. ' + roominfo[room].capacity + ')';
   return html;
 }
 
@@ -538,6 +547,7 @@ function ready_to_render() {
       <button class="btn btn-select btn-consider btn-considerAll">All Rooms</button>
       <button class="btn btn-select btn-consider engaged btn-available">Available</button>
     </div>
+    <br/>
 
     <div class="controls">
       <div class="label">Type</div>
@@ -635,7 +645,7 @@ function ready_to_render() {
   <div class="content">
 
     <div class="count"></div>
-    <div class="explanation">sorted by square footage</div>
+    <div class="explanation"></div>
     <div class="lists">
       <div class="results-list-doubles-label">Doubles</div>
       <div class="results-list-doubles"></div>
